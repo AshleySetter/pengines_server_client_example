@@ -1,0 +1,14 @@
+{
+  "name": "pengines_js",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "pengines": "github:SWI-Prolog/packages-pengines#master"
+  }
+}
