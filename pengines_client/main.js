@@ -24,6 +24,11 @@ async function main() {
     console.log("Running second ask call on data");
     const result2 = await pengine.ask('db:get_all_ais_ping(_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,"Under way using engine",_,_,_,_,_,_,_,Matches)');
     console.log("AIS Matches:", result2);
+    
+
+    console.log("Running third ask call on data to count matching pings");
+    const result3 = await pengine.ask('findall(Match,db:get_all_ais_ping(_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,"Under way using engine",_,_,_,_,_,_,_,Match), [MatchesList]), length(MatchesList, Count).');
+    console.log("AIS Matches:", result3);
 
   } catch (error) {
     console.error("An error occurred:", error);
