@@ -1,5 +1,7 @@
 :- use_module(library(pengines)).
 :- use_module(library(http/http_server)).
+:- use_module(library(sandbox)).
+:- use_module(safe_predicates).  % Load sandbox permissions
 
 % Load your Prolog files
 :- consult('ais_system.pl').
