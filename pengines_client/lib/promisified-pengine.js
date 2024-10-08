@@ -11,22 +11,32 @@ class PromisifiedPengine {
         ...this.defaultOptions,
         ask: query,
         oncreate: (pengine) => {
-          console.log(`Pengine created for query: ${query}`);
+          if (this.defaultOptions.verbose) {
+            console.log(`Pengine created for query: ${query}`);
+          }
         },
         onsuccess: (success) => {
-          console.log(`Query success: ${query}`);
+          if (this.defaultOptions.verbose) {
+            console.log(`Query success: ${query}`);
+          }
           resolve(success.data);
         },
         onfailure: (failure) => {
-          console.log(`Query failure: ${query}`, failure);
-          resolve(failure);
+          if (this.defaultOptions.verbose) {
+            console.log(`Query failure: ${query}`, failure);
+          }
+          resolve(failure.event);
         },
         onerror: (error) => {
-          console.log(`Query error: ${query}`, error);
+          if (this.defaultOptions.verbose) {
+            console.log(`Query error: ${query}`, error);
+          }
           reject(error);
         },
         ondestroy: () => {
-          console.log(`Pengine destroyed for query: ${query}`);
+          if (this.defaultOptions.verbose) {
+            console.log(`Pengine destroyed for query: ${query}`);
+          }
         },
       });
     });

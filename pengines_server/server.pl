@@ -3,11 +3,11 @@
 :- use_module(library(sandbox)).
 
 :- consult('db.pl').
-attach_db('users.pl').
 
 % Start the HTTP server on port 5000
 server(Port) :-
     http_server(http_dispatch, [port(Port)]),
+    attach_db("users.pl"), % attach database in pengines server
     format('Pengines server running at http://localhost:~d/~n', [Port]).
 
 :- initialization(server(5000)).
