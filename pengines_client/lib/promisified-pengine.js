@@ -19,7 +19,7 @@ class PromisifiedPengine {
         },
         onfailure: (failure) => {
           console.log(`Query failure: ${query}`, failure);
-          reject(failure);
+          resolve(failure);
         },
         onerror: (error) => {
           console.log(`Query error: ${query}`, error);
