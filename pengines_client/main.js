@@ -34,6 +34,10 @@ async function main() {
     const result_count_matching_ais_pings = await pengine.ask('findall(Match,db:get_all_ais_ping(_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,"Under way using engine",_,_,_,_,_,_,_,Match), [MatchesList]), length(MatchesList, Count).');
     console.log("AIS Matches:", result_count_matching_ais_pings);
 
+    console.log("Running rule to count matching pings");
+    const result_count_rule = await pengine.ask('db:get_count("Under way using engine", Count)');
+    console.log("AIS Matches:", result_count_rule);
+
   } catch (error) {
     console.error("An error occurred:", error);
   }

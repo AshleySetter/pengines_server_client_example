@@ -162,6 +162,12 @@ remove_ais_ping(A, B, C, Callsign, CargoType, Cog, D, DataSourceType, Destinatio
     retractall_ais_ping(A, B, C, Callsign, CargoType, Cog, D, DataSourceType, Destination, Draught, Eta, Heading, Imo, Latitude, Length, Longitude, Mmsi, Name, NavigationalStatus, Rot, ShipType, Sog, Timestamp, TypeOfMobile, TypeOfPositionFixingDevice, Width)
   )).
 
+% rules from rule claims
+
+get_count(NavigationalStatus, Count) :- 
+  findall(_Match,db:get_all_ais_ping(_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,NavigationalStatus,_,_,_,_,_,_,_,_Match), [_MatchesList]), length(_MatchesList, Count).
+
+
 :- multifile
     sandbox:safe_primitive/1.
 
@@ -171,4 +177,3 @@ sandbox:safe_primitive(db:get_all_ais_ping(_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_
 sandbox:safe_primitive(db:add_ais_ping(_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_)).
 sandbox:safe_primitive(db:remove_ais_ping(_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_)).
 
-% rules from rule claims
