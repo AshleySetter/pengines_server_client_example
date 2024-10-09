@@ -1,7 +1,11 @@
 % preamble - loading persistency module and code to attach database
 :- module(db,
 [
-  attach_db/1 % +File  - attach's database file
+  attach_db/1, % +File  - attach's database file
+  get_ais_ping/26,
+  get_all_ais_ping/27,
+  add_ais_ping/26,
+  remove_ais_ping/26
 ]
 ).
 
@@ -69,7 +73,7 @@ validate_type_boolean(Var, ValidVar, FieldName) :-
 % type definitions and get, add, remove function definitions generated from schema claims
 
 :- persistent
-  db:ais_ping(_A, _B, _C, _Callsign, _CargoType, _Cog, _D, _DataSourceType, _Destination, _Draught, _Eta, _Heading, _Imo, _Latitude, _Length, _Longitude, _Mmsi, _Name, _NavigationalStatus, _Rot, _ShipType, _Sog, _Timestamp, _TypeOfMobile, _TypeOfPositionFixingDevice, _Width).
+  ais_ping(_A, _B, _C, _Callsign, _CargoType, _Cog, _D, _DataSourceType, _Destination, _Draught, _Eta, _Heading, _Imo, _Latitude, _Length, _Longitude, _Mmsi, _Name, _NavigationalStatus, _Rot, _ShipType, _Sog, _Timestamp, _TypeOfMobile, _TypeOfPositionFixingDevice, _Width).
 
 get_ais_ping(A, B, C, Callsign, CargoType, Cog, D, DataSourceType, Destination, Draught, Eta, Heading, Imo, Latitude, Length, Longitude, Mmsi, Name, NavigationalStatus, Rot, ShipType, Sog, Timestamp, TypeOfMobile, TypeOfPositionFixingDevice, Width) :-
   with_mutex(db, ais_ping(A, B, C, Callsign, CargoType, Cog, D, DataSourceType, Destination, Draught, Eta, Heading, Imo, Latitude, Length, Longitude, Mmsi, Name, NavigationalStatus, Rot, ShipType, Sog, Timestamp, TypeOfMobile, TypeOfPositionFixingDevice, Width)).
@@ -148,12 +152,23 @@ add_ais_ping(A, B, C, Callsign, CargoType, Cog, D, DataSourceType, Destination, 
   validate_type_string(TypeOfPositionFixingDevice, ValidTypeOfPositionFixingDevice, "TypeOfPositionFixingDevice"),
   % Validate and assert Width
   validate_type_number(Width, ValidWidth, "Width"),
-  assert_ais_ping(ValidA, ValidB, ValidC, ValidCallsign, ValidCargoType, ValidCog, ValidD, ValidDataSourceType, ValidDestination, ValidDraught, ValidEta, ValidHeading, ValidImo, ValidLatitude, ValidLength, ValidLongitude, ValidMmsi, ValidName, ValidNavigationalStatus, ValidRot, ValidShipType, ValidSog, ValidTimestamp, ValidTypeOfMobile, ValidTypeOfPositionFixingDevice, ValidWidth).
+  with_mutex(db, 
+    assert_ais_ping(ValidA, ValidB, ValidC, ValidCallsign, ValidCargoType, ValidCog, ValidD, ValidDataSourceType, ValidDestination, ValidDraught, ValidEta, ValidHeading, ValidImo, ValidLatitude, ValidLength, ValidLongitude, ValidMmsi, ValidName, ValidNavigationalStatus, ValidRot, ValidShipType, ValidSog, ValidTimestamp, ValidTypeOfMobile, ValidTypeOfPositionFixingDevice, ValidWidth)
+  ).
 
 remove_ais_ping(A, B, C, Callsign, CargoType, Cog, D, DataSourceType, Destination, Draught, Eta, Heading, Imo, Latitude, Length, Longitude, Mmsi, Name, NavigationalStatus, Rot, ShipType, Sog, Timestamp, TypeOfMobile, TypeOfPositionFixingDevice, Width) :-
   ais_ping(A, B, C, Callsign, CargoType, Cog, D, DataSourceType, Destination, Draught, Eta, Heading, Imo, Latitude, Length, Longitude, Mmsi, Name, NavigationalStatus, Rot, ShipType, Sog, Timestamp, TypeOfMobile, TypeOfPositionFixingDevice, Width),
   with_mutex(db, (
     retractall_ais_ping(A, B, C, Callsign, CargoType, Cog, D, DataSourceType, Destination, Draught, Eta, Heading, Imo, Latitude, Length, Longitude, Mmsi, Name, NavigationalStatus, Rot, ShipType, Sog, Timestamp, TypeOfMobile, TypeOfPositionFixingDevice, Width)
   )).
+
+:- multifile
+    sandbox:safe_primitive/1.
+
+% predicates called on the client need to be marked as safe
+sandbox:safe_primitive(db:get_ais_ping(_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_)).
+sandbox:safe_primitive(db:get_all_ais_ping(_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_)).
+sandbox:safe_primitive(db:add_ais_ping(_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_)).
+sandbox:safe_primitive(db:remove_ais_ping(_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_)).
 
 % rules from rule claims
